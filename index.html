@@ -41,13 +41,15 @@ section.visible{opacity:1;transform:none}
 .folder{cursor:pointer;font-weight:600;margin-bottom:10px}
 .files{display:none;margin-top:12px}
 .files.open{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
-.file{border:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s}
-.file:hover{transform:translateY(-5px)}
+.file{position:relative;overflow:hiddenborder:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s}
+.file:hover{transform:translateY(-6px);box-shadow:0 0 0 1px rgba(255,255,255,.15),0 10px 30px rgba(255,255,255,.08)}
 .file button{margin-top:10px;padding:9px 14px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text)}
 .muted{color:var(--muted)}
 .links{display:flex;gap:22px}
 .links a{display:flex;gap:8px;align-items:center;color:var(--text);text-decoration:none}
 .links svg{width:18px;height:18px;fill:currentColor}
+.osicon{width:20px;height:20px;vertical-align:middle;margin-right:8px;filter:invert(1)}
+.file:hover .osicon{transform:scale(1.08)}
 footer{text-align:center;opacity:.5;padding:30px}
 </style>
 </head>
@@ -74,11 +76,11 @@ footer{text-align:center;opacity:.5;padding:30px}
 <div class="tree">
 <div class="folder" onclick="toggleFolder()">Weasco/</div>
 <div class="files" id="files">
-<div class="file"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M2 3l9-1v10H2V3zm0 18l9 1V12H2v9zm11 1l9 1V12h-9v10zm0-20l9-1v10h-9V2z"/></svg> <b>Windows</b><br><a href="Weasco Setup 2.6.exe" download><button>Download</button></a></div>
-<div class="file"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2c2 0 4 2 4 5 0 2-1 3-1 5h-6c0-2-1-3-1-5 0-3 2-5 4-5zM8 14h8v4H8z"/></svg> <b>Linux</b><div class="muted">coming soon</div></div>
-<div class="file"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M16 13c0 3-2 6-4 6s-4-3-4-6 2-5 4-5 4 2 4 5z"/></svg> <b>Mac</b><div class="muted">coming soon</div></div>
-<div class="file"><svg viewBox="0 0 24 24" width="20" height="20"><rect fill="currentColor" x="6" y="8" width="12" height="10" rx="3"/></svg> <b>Android</b><div class="muted">coming but not soon</div></div>
-<div class="file"><svg viewBox="0 0 24 24" width="20" height="20"><circle fill="currentColor" cx="12" cy="12" r="5"/></svg> <b>iOS</b><div class="muted">don't coming probably</div></div>
+<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/windows11.svg"> <b>Windows</b><br><a href="Weasco Setup 2.6.exe" download><button>Download</button></a></div>
+<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg"> <b>Linux</b><div class="muted">coming soon</div></div>
+<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg"> <b>Mac</b><div class="muted">coming soon</div></div>
+<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/android.svg"> <b>Android</b><div class="muted">coming but not soon</div></div>
+<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg"> <b>iOS</b><div class="muted">don't coming probably</div></div>
 </div>
 </div>
 </section>
@@ -86,10 +88,8 @@ footer{text-align:center;opacity:.5;padding:30px}
 <section class="about"><div class="tree"><h2>About me</h2><p>I am an independent young developer — amateur and inexperienced, yet I trust my potential. I study at MCO AIHL. Reach me via Reddit or GitHub. I value freedom and individual choice.</p></div></section>
 
 <section><div class="tree"><h2>Repo's & Subreddits</h2><div class="links">
-      <a href="https://github.com/TaxForRedTux/Weasco" target="_blank">
-        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a12 12 0 00-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.5-4-1.5-.6-1.3-1.4-1.6-1.4-1.6-1.2-.8.1-.8.1-.8 1.3.1 2 .9 2 .9 1.2 2 3.2 1.4 4 .9.1-.9.5-1.4.9-1.7-2.7-.3-5.6-1.3-5.6-6a4.7 4.7 0 011.2-3.3 4.4 4.4 0 01.1-3.3s1-.3 3.4 1.3a11.7 11.7 0 016.2 0c2.3-1.6 3.4-1.3 3.4-1.3a4.4 4.4 0 01.1 3.3 4.7 4.7 0 011.2 3.3c0 4.7-2.9 5.7-5.7 6 .5.4 1 1.2 1 2.5v3.7c0 .3.2.7.8.6A12 12 0 0012 .5z"/></svg>
-        GitHub</a>
-      <a href="https://www.reddit.com/r/weasco/" target="_blank"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M14.3 2.6l-1.2 4.7c2.7.3 4.9 2.2 5.6 4.7.6-.2 1.3-.3 2-.3 1.7 0 3 1.3 3 3 0 1.6-1.3 3-3 3-.5 0-1-.1-1.5-.4-1.6 2.4-4.6 4.1-8.1 4.1s-6.5-1.7-8.1-4.1c-.5.3-1 .4-1.5.4-1.7 0-3-1.4-3-3 0-1.7 1.3-3 3-3 .7 0 1.4.1 2 .3.7-2.5 2.9-4.4 5.6-4.7l-1.2-4.7 4.4-1 4.4 1zM9 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM8.5 16c.8.8 2.1 1.3 3.5 1.3s2.7-.5 3.5-1.3"/></svg>Reddit</a>
+      <a href="https://github.com/TaxForRedTux/Weasco" target="_blank"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg">GitHub</a>
+      <a href="https://www.reddit.com/r/weasco/" target="_blank"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/reddit.svg">Reddit</a>
     </div></div></section>
 
 <div class="navhint" id="hint"></div>
@@ -127,3 +127,4 @@ footer{text-align:center;opacity:.5;padding:30px}
 </script>
 </body>
 </html>
+
