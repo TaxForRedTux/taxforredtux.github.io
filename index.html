@@ -89,41 +89,35 @@ footer{text-align:center;opacity:.5;padding:30px}
 <div class="navhint" id="hint"></div>
 <footer>RedTux © 2026</footer>
 <script>
-// navigation
-function go(i){document.querySelectorAll('section')[i].scrollIntoView({behavior:'smooth'})}
-function toggleTheme(){document.body.classList.toggle('light')}
-function toggleFolder(){document.getElementById('files').classList.toggle('open')}
+(function(){
+  const sections = document.querySelectorAll('section');
+  window.go = function(i){ if(sections[i]) sections[i].scrollIntoView({behavior:'smooth'}); };
+  window.toggleTheme = function(){ document.body.classList.toggle('light'); };
+  window.toggleFolder = function(){ const f=document.getElementById('files'); if(f) f.classList.toggle('open'); };
 
-// reveal
-const obs=new IntersectionObserver(entries=>{
- entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
-},{threshold:.15});
-document.querySelectorAll('section').forEach((s,idx)=>{obs.observe(s); if(idx===0)s.classList.add('visible')});
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:.15});
+  sections.forEach((s,idx)=>{ obs.observe(s); if(idx===0) s.classList.add('visible'); });
 
-// carousel
-let i=0;const bgs=document.querySelectorAll('.bg');
-setInterval(()=>{
- if(!bgs.length)return;
- bgs[i].classList.remove('active');
- i=(i+1)%bgs.length;
- bgs[i].classList.add('active');
-},5000);
+  let i=0; const bgs=document.querySelectorAll('.bg');
+  if(bgs.length){ setInterval(()=>{ bgs[i].classList.remove('active'); i=(i+1)%bgs.length; bgs[i].classList.add('active'); },5000); }
 
-// cursor prev next
-const hint=document.getElementById('hint');
-document.addEventListener('mousemove',e=>{
- const w=window.innerWidth;
- if(e.clientX<80){hint.textContent='Önceki';hint.style.opacity=1;hint.style.left=e.clientX+20+'px';hint.style.top=e.clientY+'px';hint.dataset.dir='prev'}
- else if(e.clientX>w-80){hint.textContent='Sonraki';hint.style.opacity=1;hint.style.left=e.clientX-20+'px';hint.style.top=e.clientY+'px';hint.dataset.dir='next'}
- else{hint.style.opacity=0;hint.dataset.dir=''}
-});
+  const hint=document.getElementById('hint');
+  document.addEventListener('mousemove',e=>{
+    if(!hint) return; const w=window.innerWidth;
+    if(e.clientX<80){ hint.textContent='Önceki'; hint.style.opacity=1; hint.style.left=e.clientX+20+'px'; hint.style.top=e.clientY+'px'; hint.dataset.dir='prev'; }
+    else if(e.clientX>w-80){ hint.textContent='Sonraki'; hint.style.opacity=1; hint.style.left=e.clientX-20+'px'; hint.style.top=e.clientY+'px'; hint.dataset.dir='next'; }
+    else{ hint.style.opacity=0; hint.dataset.dir=''; }
+  });
 
-document.addEventListener('click',()=>{
- if(!hint.dataset.dir||!bgs.length)return;
- bgs[i].classList.remove('active');
- i = hint.dataset.dir==='prev' ? (i-1+bgs.length)%bgs.length : (i+1)%bgs.length;
- bgs[i].classList.add('active');
-});
+  document.addEventListener('click',()=>{
+    if(!hint||!hint.dataset.dir||!bgs.length) return;
+    bgs[i].classList.remove('active');
+    i = hint.dataset.dir==='prev' ? (i-1+bgs.length)%bgs.length : (i+1)%bgs.length;
+    bgs[i].classList.add('active');
+  });
+})();
 </script>
 </body>
 </html>
