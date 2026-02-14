@@ -4,52 +4,47 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RedTux</title>
-<link href="https://unpkg.com/@vercel/geist@latest/font.css" rel="stylesheet">
+
+<!-- Geist proper embed -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
- --bg:#0b0d10;
- --panel:#12151b;
- --text:#e8e8ea;
- --muted:#9aa0a6;
- --border:#1f2530;
-}
-.light{
- --bg:#f5f7fb;
- --panel:#ffffff;
- --text:#0b0d10;
- --muted:#5b6168;
- --border:#e3e7ef;
-}
+:root{--bg:#000;--panel:#050505;--text:#fff;--muted:#8a8a8a;--border:#1a1a1a}
+.light{--bg:#fff;--panel:#fafafa;--text:#000;--muted:#555;--border:#e5e5e5}
+
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'Geist',system-ui,Arial;transition:.25s}
 
-/* HEADER */
-header{position:fixed;top:0;width:100%;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(10,12,16,.6);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:10}
-.nav-left{display:flex;gap:24px;font-size:18px}
-.brand{font-weight:700}
-.products{font-weight:300;opacity:.75;cursor:pointer}
+/* header */
+header{position:fixed;top:0;width:100%;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 36px;background:rgba(0,0,0,.65);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);z-index:10}
+.nav-left{display:flex;gap:28px;font-size:20px}
+.brand{font-weight:700;letter-spacing:.02em}
+.products{font-weight:300;opacity:.8;cursor:pointer}
 .products:hover{opacity:1}
-.theme{cursor:pointer;opacity:.7}
-.theme:hover{opacity:1}
+
+.theme{cursor:pointer;font-size:22px;border:1px solid var(--border);padding:10px 14px;border-radius:14px}
+.theme:hover{background:rgba(255,255,255,.08)}
 
 .slider{overflow-y:auto;height:100vh;scroll-snap-type:y mandatory}
-section{min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:90px 24px}
+section{min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:110px 24px}
 
-.hero h1{font-style:italic;font-size:60px;font-weight:400;letter-spacing:.02em}
+.hero h1{font-style:italic;font-size:64px;font-weight:400;letter-spacing:.03em}
 
-.card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:44px;max-width:1000px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:50px;max-width:1100px;width:100%}
 
-/* DOWNLOAD GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px;margin-top:28px}
-.dl{border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;transition:.18s;background:linear-gradient(180deg,transparent,rgba(255,255,255,.02))}
-.dl:hover{transform:translateY(-4px)}
-.dl img{width:28px;height:28px}
-.dl button{padding:8px 14px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;margin-top:34px}
+.dl{border:1px solid var(--border);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:16px;transition:.2s}
+.dl:hover{transform:translateY(-6px)}
+.dl img{width:30px;height:30px;filter:invert(1)}
+.light .dl img{filter:none}
+
+.dl button{padding:10px 16px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-weight:500}
 .dl button:hover{background:rgba(255,255,255,.08)}
 .muted{color:var(--muted)}
 
-.about p{line-height:1.9;font-size:16px}
+.about p{line-height:2;font-size:17px}
 footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
 </style>
 </head>
@@ -59,7 +54,7 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
     <div class="brand">RedTux</div>
     <div class="products" onclick="scrollToDownloads()">Products</div>
   </div>
-  <div class="theme" onclick="toggleTheme()">◐</div>
+  <div class="theme" onclick="toggleTheme()">☀︎ / ☾</div>
 </header>
 
 <div class="slider">
@@ -68,7 +63,7 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
 </section>
 
 <section>
-  <div class="card" id="downloadsCard">
+  <div class="card">
     <h2>Weasco downloads</h2>
     <div class="grid">
       <div class="dl">
@@ -78,7 +73,7 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
       </div>
       <div class="dl">
         <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg">
-        <b>Linux</b>
+        <b>Linux / Pardus</b>
         <div class="muted">coming soon</div>
       </div>
       <div class="dl">
