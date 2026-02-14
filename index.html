@@ -95,7 +95,7 @@ function toggleFolder(){document.getElementById('files').classList.toggle('open'
 
 /* reveal */
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.15})
-document.querySelectorAll('section').forEach(s=>obs.observe(s))
+document.querySelectorAll('section').forEach((s,idx)=>{obs.observe(s); if(idx===0) s.classList.add('visible')});
 
 /* carousel */
 let i=0;const bgs=document.querySelectorAll('.bg');
@@ -104,12 +104,19 @@ setInterval(()=>{bgs[i].classList.remove('active');i=(i+1)%bgs.length;bgs[i].cla
 /* cursor prev next */
 const hint=document.getElementById('hint');
 document.addEventListener('mousemove',e=>{
-const x=e.clientX/w=window.innerWidth;
-if(e.clientX<80){hint.textContent='Önceki';hint.style.opacity=1;hint.style.left=e.clientX+20+'px';hint.style.top=e.clientY+'px'}
-else if(e.clientX>w-80){hint.textContent='Sonraki';hint.style.opacity=1;hint.style.left=e.clientX-20+'px';hint.style.top=e.clientY+'px'}
-else hint.style.opacity=0
+const w=window.innerWidth;
+if(e.clientX<80){hint.textContent='Önceki';hint.style.opacity=1;hint.style.left=e.clientX+20+'px';hint.style.top=e.clientY+'px';hint.dataset.dir='prev'}
+else if(e.clientX>w-80){hint.textContent='Sonraki';hint.style.opacity=1;hint.style.left=e.clientX-20+'px';hint.style.top=e.clientY+'px';hint.dataset.dir='next'}
+else{hint.style.opacity=0;hint.dataset.dir=''}
+});ity=0
 });
-document.addEventListener('click',e=>{if(hint.style.opacity==1){bgs[i].classList.remove('active');i=hint.textContent==='Önceki'?(i-1+bgs.length)%bgs.length:(i+1)%bgs.length;bgs[i].classList.add('active')}});
+document.addEventListener('click',e=>{
+ if(hint.dataset.dir){
+  bgs[i].classList.remove('active');
+  i = hint.dataset.dir==='prev' ? (i-1+bgs.length)%bgs.length : (i+1)%bgs.length;
+  bgs[i].classList.add('active');
+ }
+});
 </script>
 </body>
 </html>
