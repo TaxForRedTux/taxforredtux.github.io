@@ -1,43 +1,153 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>taxforredtux</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RedTux</title>
+<link href="https://unpkg.com/@vercel/geist@latest/font.css" rel="stylesheet">
 <style>
-body {
-    margin:0;
-    font-family: system-ui, -apple-system, sans-serif;
-    background:#0f1115;
-    color:#e6e6e6;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
+:root{
+  --bg:#0b0d10;
+  --panel:#12151b;
+  --text:#e8e8ea;
+  --muted:#9aa0a6;
+  --accent:#ffffff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Geist',system-ui,Arial;
 }
 
-.card {
-    text-align:center;
-    padding:40px;
-    border:1px solid #2a2f3a;
-    border-radius:16px;
-    background:#151922;
+/* HEADER */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  height:64px;
+  display:flex;
+  align-items:center;
+  padding:0 32px;
+  background:rgba(11,13,16,.55);
+  backdrop-filter: blur(12px);
+  border-bottom:1px solid #1d222b;
+  z-index:10;
+}
+.nav-left{
+  display:flex;
+  gap:24px;
+  font-size:18px;
+}
+.brand{font-weight:700}
+.products{font-weight:300;opacity:.8;cursor:pointer}
+
+/* SLIDER */
+.slider{
+  overflow:hidden;
+  height:100vh;
+  scroll-snap-type:y mandatory;
+}
+section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  scroll-snap-align:start;
+  padding:80px 24px;
 }
 
-h1 {
-    margin:0 0 10px 0;
-    font-size:42px;
+.hero{
+  flex-direction:column;
+  text-align:center;
+}
+.hero h1{
+  font-style:italic;
+  font-size:52px;
+  font-weight:400;
 }
 
-p { opacity:.7 }
+.card{
+  background:var(--panel);
+  border:1px solid #1f2530;
+  border-radius:18px;
+  padding:40px;
+  max-width:720px;
+  width:100%;
+}
+
+.downloads h2,.about h2{margin-top:0}
+.list{
+  margin-top:20px;
+  line-height:2.2;
+}
+.list span{color:var(--muted)}
+button{
+  margin-left:10px;
+  padding:6px 14px;
+  border-radius:10px;
+  border:1px solid #2b3340;
+  background:#161a22;
+  color:var(--text);
+  cursor:pointer;
+}
+button:hover{background:#1d2430}
+
+footer{
+  text-align:center;
+  opacity:.5;
+  padding:40px 0;
+  font-size:14px;
+}
 </style>
 </head>
-
 <body>
-<div class="card">
-    <h1>taxforredtux</h1>
-    <p>it works.</p>
+<header>
+  <div class="nav-left">
+    <div class="brand">RedTux</div>
+    <div class="products" onclick="scrollToDownloads()">Products</div>
+  </div>
+</header>
+
+<div class="slider" id="slider">
+
+<section class="hero">
+  <h1>Bağımsız geliştiriciyim.</h1>
+</section>
+
+<section class="downloads">
+  <div class="card">
+    <h2>Weasco downloads</h2>
+    <div class="list">
+      Windows <button onclick="alert('download eklenecek')">download</button><br>
+      Linux <span>(coming soon)</span><br>
+      Mac <span>(coming soon)</span><br>
+      Android <span>(coming but not soon)</span><br>
+      iOS <span>(don't coming probably)</span>
+    </div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="card">
+    <h2>About me</h2>
+    <p>
+I am an independent young developer — inexperienced, amateur, yet slightly confident in my abilities. I study at MCO AIHL and you can reach me through Reddit or GitHub for questions. That is about everything I can say for now. I am a libertarian.
+    </p>
+  </div>
+</section>
+
 </div>
+
+<footer>
+RedTux © 2026
+</footer>
+
+<script>
+function scrollToDownloads(){
+  document.querySelectorAll('section')[1].scrollIntoView({behavior:'smooth'});
+}
+</script>
 </body>
 </html>
