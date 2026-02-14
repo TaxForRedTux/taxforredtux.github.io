@@ -7,102 +7,109 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <style>
 :root{--bg:#000;--panel:#050505;--text:#fff;--muted:#8a8a8a;--border:#1a1a1a}
 .light{--bg:#fff;--panel:#fafafa;--text:#000;--muted:#555;--border:#e5e5e5}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'Geist',system-ui,Arial;transition:.35s cubic-bezier(.22,1,.36,1)}
 
-/* HEADER */
-header{position:fixed;top:0;width:100%;height:78px;display:flex;align-items:center;justify-content:space-between;padding:0 44px;background:rgba(0,0,0,.89);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);z-index:10;transition:.35s}
-.nav-left{display:flex;gap:34px;font-size:20px;align-items:center}
-.brand{font-weight:700;letter-spacing:.02em}
-.products,.aboutlink,.repolink{font-weight:300;opacity:.8;cursor:pointer}
+/* header */
+header{position:fixed;top:0;width:100%;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 44px;background:rgba(0,0,0,.78);backdrop-filter:blur(28px);border-bottom:1px solid var(--border);z-index:20}
+.nav-left{display:flex;gap:34px;font-size:20px}
+.brand{font-weight:700}
+.products,.aboutlink,.repolink{font-weight:300;opacity:.85;cursor:pointer}
 .products:hover,.aboutlink:hover,.repolink:hover{opacity:1}
-
-.theme{cursor:pointer;border:1px solid var(--border);padding:12px;border-radius:16px;display:flex;align-items:center;justify-content:center}
+.theme{cursor:pointer;border:1px solid var(--border);padding:12px;border-radius:16px}
 .theme svg{width:22px;height:22px;fill:var(--text)}
 
-section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px;opacity:0;transform:translateY(40px);transition:.8s cubic-bezier(.22,1,.36,1)}
+section{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:90px 24px;opacity:0;transform:translateY(35px);transition:.7s cubic-bezier(.22,1,.36,1)}
 section.visible{opacity:1;transform:none}
-.hero h1{font-style:italic;font-size:68px;font-weight:400;letter-spacing:.04em;text-align:center}
-.hero span{opacity:.6;font-size:18px;display:block;margin-top:16px}
 
-.card{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:52px;max-width:1100px;width:100%;transition:.4s}
-.card:hover{transform:translateY(-6px)}
+/* HERO CAROUSEL */
+.hero{position:relative;overflow:hidden}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease}
+.bg.active{opacity:.45}
+.hero h1{position:relative;font-style:italic;font-size:66px;text-align:center}
+.hero span{display:block;font-size:18px;opacity:.6;margin-top:12px}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:28px;margin-top:34px}
-.dl{border:1px solid var(--border);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:16px;transition:.25s}
-.dl:hover{transform:translateY(-8px)}
-.dl img{width:32px;height:32px;filter:invert(1)}
-.light .dl img{filter:none}
-.dl button{padding:11px 16px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-weight:500;transition:.2s}
-.dl button:hover{background:rgba(255,255,255,.1)}
+/* cursor nav */
+.navhint{position:fixed;pointer-events:none;background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-size:14px;transform:translate(-50%,-50%);opacity:0;transition:.15s;z-index:30}
+
+/* products tree */
+.tree{width:100%;max-width:900px;border:1px solid var(--border);border-radius:18px;padding:26px}
+.folder{cursor:pointer;font-weight:600;margin-bottom:10px}
+.files{display:none;margin-top:12px}
+.files.open{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.file{border:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s}
+.file:hover{transform:translateY(-5px)}
+.file button{margin-top:10px;padding:9px 14px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text)}
 .muted{color:var(--muted)}
-
-.links{display:flex;gap:22px;margin-top:18px}
-.links a{display:flex;gap:8px;align-items:center;color:var(--text);text-decoration:none;opacity:.8}
-.links a:hover{opacity:1}
+.links{display:flex;gap:22px}
+.links a{display:flex;gap:8px;align-items:center;color:var(--text);text-decoration:none}
 .links svg{width:18px;height:18px;fill:currentColor}
-
-footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
+footer{text-align:center;opacity:.5;padding:30px}
 </style>
 </head>
 <body>
 <header>
-  <div class="nav-left">
-    <div class="brand">RedTux</div>
-    <div class="products" onclick="go(1)">Products</div>
-    <div class="aboutlink" onclick="go(2)">About Me</div>
-    <div class="repolink" onclick="go(3)">Repo's & Subreddits</div>
-  </div>
-  <div class="theme" onclick="toggleTheme()" id="themeBtn">
-    <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z"/></svg>
-  </div>
+<div class="nav-left">
+<div class="brand">RedTux</div>
+<div class="products" onclick="go(1)">Products</div>
+<div class="aboutlink" onclick="go(2)">About Me</div>
+<div class="repolink" onclick="go(3)">Repo's & Subreddits</div>
+</div>
+<div class="theme" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z"/></svg></div>
 </header>
 
-<section class="hero"><h1>Bağımsız Geliştiriciyim<br><span>-RedTux</span></h1></section>
-
-<section>
-  <div class="card">
-    <h2>Weasco downloads</h2>
-    <div class="grid">
-      <div class="dl"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/windows11.svg"><b>Windows</b><a href="Weasco Setup 2.6.exe" download><button>Download</button></a></div>
-      <div class="dl"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg"><b>Linux</b><div class="muted">coming soon</div></div>
-      <div class="dl"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg"><b>Mac</b><div class="muted">coming soon</div></div>
-      <div class="dl"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/android.svg"><b>Android</b><div class="muted">coming but not soon</div></div>
-      <div class="dl"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg"><b>iOS</b><div class="muted">don't coming probably</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="about">
-  <div class="card">
-    <h2>About me</h2>
-    <p>I am an independent young developer — amateur and inexperienced, yet I trust my potential. I study at MCO AIHL. If you want to reach me, contact me via Reddit or GitHub. That is basically everything for now. I value freedom and individual choice.</p>
-  </div>
+<section class="hero">
+<div class="bg active" style="background-image:url('CARUSEL1.png')"></div>
+<div class="bg" style="background-image:url('CARUSEL2.png')"></div>
+<div class="bg" style="background-image:url('CARUSEL3.png')"></div>
+<div class="bg" style="background-image:url('CARUSEL4.png')"></div>
+<h1>“Bağımsız Geliştiriciyim”<span>- RedTux</span></h1>
 </section>
 
 <section>
-  <div class="card">
-    <h2>Repo's & Subreddits</h2>
-    <div class="links">
-      <a href="https://github.com/TaxForRedTux/Weasco" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 .5a12 12 0 00-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.5-4-1.5-.6-1.3-1.4-1.6-1.4-1.6-1.2-.8.1-.8.1-.8 1.3.1 2 .9 2 .9 1.2 2 3.2 1.4 4 .9.1-.9.5-1.4.9-1.7-2.7-.3-5.6-1.3-5.6-6a4.7 4.7 0 011.2-3.3 4.4 4.4 0 01.1-3.3s1-.3 3.4 1.3a11.7 11.7 0 016.2 0c2.3-1.6 3.4-1.3 3.4-1.3a4.4 4.4 0 01.1 3.3 4.7 4.7 0 011.2 3.3c0 4.7-2.9 5.7-5.7 6 .5.4 1 1.2 1 2.5v3.7c0 .3.2.7.8.6A12 12 0 0012 .5z"/></svg>GitHub</a>
-      <a href="https://www.reddit.com/r/weasco/" target="_blank"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="12" r="1.5" fill="#000"/><circle cx="15" cy="12" r="1.5" fill="#000"/></svg>Reddit</a>
-    </div>
-  </div>
+<div class="tree">
+<div class="folder" onclick="toggleFolder()">Weasco/</div>
+<div class="files" id="files">
+<div class="file"><b>Windows</b><br><a href="Weasco Setup 2.6.exe" download><button>Download</button></a></div>
+<div class="file"><b>Linux</b><div class="muted">coming soon</div></div>
+<div class="file"><b>Mac</b><div class="muted">coming soon</div></div>
+<div class="file"><b>Android</b><div class="muted">coming but not soon</div></div>
+<div class="file"><b>iOS</b><div class="muted">don't coming probably</div></div>
+</div>
+</div>
 </section>
 
+<section class="about"><div class="tree"><h2>About me</h2><p>I am an independent young developer — amateur and inexperienced, yet I trust my potential. I study at MCO AIHL. Reach me via Reddit or GitHub. I value freedom and individual choice.</p></div></section>
+
+<section><div class="tree"><h2>Repo's & Subreddits</h2><div class="links"><a href="https://github.com/TaxForRedTux/Weasco" target="_blank">GitHub</a><a href="https://www.reddit.com/r/weasco/" target="_blank">Reddit</a></div></div></section>
+
+<div class="navhint" id="hint"></div>
 <footer>RedTux © 2026</footer>
-
 <script>
 function go(i){document.querySelectorAll('section')[i].scrollIntoView({behavior:'smooth'})}
 function toggleTheme(){document.body.classList.toggle('light')}
+function toggleFolder(){document.getElementById('files').classList.toggle('open')}
 
+/* reveal */
 const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.15})
 document.querySelectorAll('section').forEach(s=>obs.observe(s))
+
+/* carousel */
+let i=0;const bgs=document.querySelectorAll('.bg');
+setInterval(()=>{bgs[i].classList.remove('active');i=(i+1)%bgs.length;bgs[i].classList.add('active')},5000);
+
+/* cursor prev next */
+const hint=document.getElementById('hint');
+document.addEventListener('mousemove',e=>{
+const x=e.clientX/w=window.innerWidth;
+if(e.clientX<80){hint.textContent='Önceki';hint.style.opacity=1;hint.style.left=e.clientX+20+'px';hint.style.top=e.clientY+'px'}
+else if(e.clientX>w-80){hint.textContent='Sonraki';hint.style.opacity=1;hint.style.left=e.clientX-20+'px';hint.style.top=e.clientY+'px'}
+else hint.style.opacity=0
+});
+document.addEventListener('click',e=>{if(hint.style.opacity==1){bgs[i].classList.remove('active');i=hint.textContent==='Önceki'?(i-1+bgs.length)%bgs.length:(i+1)%bgs.length;bgs[i].classList.add('active')}});
 </script>
 </body>
 </html>
