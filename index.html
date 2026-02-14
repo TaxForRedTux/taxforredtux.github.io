@@ -4,8 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RedTux</title>
-
-<!-- Geist proper embed -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,37 +11,28 @@
 <style>
 :root{--bg:#000;--panel:#050505;--text:#fff;--muted:#8a8a8a;--border:#1a1a1a}
 .light{--bg:#fff;--panel:#fafafa;--text:#000;--muted:#555;--border:#e5e5e5}
-
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'Geist',system-ui,Arial;transition:.25s}
-
-/* header */
 header{position:fixed;top:0;width:100%;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 36px;background:rgba(0,0,0,.65);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);z-index:10}
 .nav-left{display:flex;gap:28px;font-size:20px}
 .brand{font-weight:700;letter-spacing:.02em}
 .products{font-weight:300;opacity:.8;cursor:pointer}
 .products:hover{opacity:1}
-
-.theme{cursor:pointer;font-size:22px;border:1px solid var(--border);padding:10px 14px;border-radius:14px}
-.theme:hover{background:rgba(255,255,255,.08)}
-
+.theme{cursor:pointer;border:1px solid var(--border);padding:10px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.theme svg{width:22px;height:22px;fill:var(--text)}
 .slider{overflow-y:auto;height:100vh;scroll-snap-type:y mandatory}
 section{min-height:100vh;display:flex;align-items:center;justify-content:center;scroll-snap-align:start;padding:110px 24px}
-
 .hero h1{font-style:italic;font-size:64px;font-weight:400;letter-spacing:.03em}
-
 .card{background:var(--panel);border:1px solid var(--border);border-radius:24px;padding:50px;max-width:1100px;width:100%}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;margin-top:34px}
 .dl{border:1px solid var(--border);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:16px;transition:.2s}
 .dl:hover{transform:translateY(-6px)}
+.icon-row{display:flex;gap:8px;align-items:center}
 .dl img{width:30px;height:30px;filter:invert(1)}
 .light .dl img{filter:none}
-
 .dl button{padding:10px 16px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-weight:500}
 .dl button:hover{background:rgba(255,255,255,.08)}
 .muted{color:var(--muted)}
-
 .about p{line-height:2;font-size:17px}
 footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
 </style>
@@ -54,14 +43,13 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
     <div class="brand">RedTux</div>
     <div class="products" onclick="scrollToDownloads()">Products</div>
   </div>
-  <div class="theme" onclick="toggleTheme()">☀︎ / ☾</div>
+  <div class="theme" onclick="toggleTheme()" id="themeBtn">
+    <!-- moon icon default -->
+    <svg id="themeIcon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z"/></svg>
+  </div>
 </header>
-
 <div class="slider">
-<section class="hero">
-  <h1>Bağımsız geliştiriciyim.</h1>
-</section>
-
+<section class="hero"><h1>Bağımsız geliştiriciyim.</h1></section>
 <section>
   <div class="card">
     <h2>Weasco downloads</h2>
@@ -72,7 +60,10 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
         <a href="Weasco Setup 2.6.exe" download><button>Download</button></a>
       </div>
       <div class="dl">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg">
+        <div class="icon-row">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/pardus.svg">
+        </div>
         <b>Linux / Pardus</b>
         <div class="muted">coming soon</div>
       </div>
@@ -94,7 +85,6 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
     </div>
   </div>
 </section>
-
 <section class="about">
   <div class="card">
     <h2>About me</h2>
@@ -102,13 +92,18 @@ footer{text-align:center;opacity:.5;padding:40px 0;font-size:14px}
   </div>
 </section>
 </div>
-
 <footer>RedTux © 2026</footer>
-
 <script>
 function scrollToDownloads(){document.querySelectorAll('section')[1].scrollIntoView({behavior:'smooth'})}
-function toggleTheme(){document.body.classList.toggle('light')}
+function toggleTheme(){
+ document.body.classList.toggle('light');
+ const icon=document.getElementById('themeIcon');
+ if(document.body.classList.contains('light')){
+  icon.innerHTML='<circle cx="12" cy="12" r="5"/><g stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="23" y2="12"/></g>';
+ }else{
+  icon.innerHTML='<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z"/>';
+ }
+}
 </script>
 </body>
 </html>
-
