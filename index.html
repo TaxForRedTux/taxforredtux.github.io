@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000;--panel:#050505;--text:#fff;--muted:#8a8a8a;--border:#1a1a1a}
-.light{--bg:#fff;--panel:#fafafa;--text:#000;--muted:#555;--border:#e5e5e5}
+
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'Geist',system-ui,Arial;transition:.35s cubic-bezier(.22,1,.36,1)}
 
@@ -59,7 +59,7 @@ footer{text-align:center;opacity:.5;padding:30px}
 <div class="aboutlink" onclick="go(2)">About Me</div>
 <div class="repolink" onclick="go(3)">Repo's & Subreddits</div>
 </div>
-<div class="theme" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z"/></svg></div>
+
 </header>
 
 <section class="hero">
@@ -85,7 +85,14 @@ footer{text-align:center;opacity:.5;padding:30px}
 
 <section class="about"><div class="tree"><h2>About me</h2><p>I am an independent young developer — amateur and inexperienced, yet I trust my potential. I study at MCO AIHL. Reach me via Reddit or GitHub. I value freedom and individual choice.</p></div></section>
 
-<section><div class="tree"><h2>Repo's & Subreddits</h2><div class="links"><a href="https://github.com/TaxForRedTux/Weasco" target="_blank">GitHub</a><a href="https://www.reddit.com/r/weasco/" target="_blank">Reddit</a></div></div></section>
+<section><div class="tree"><h2>Repo's & Subreddits</h2><div class="links">
+      <a href="https://github.com/TaxForRedTux/Weasco" target="_blank">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5a12 12 0 00-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.5-4-1.5-.6-1.3-1.4-1.6-1.4-1.6-1.2-.8.1-.8.1-.8 1.3.1 2 .9 2 .9 1.2 2 3.2 1.4 4 .9.1-.9.5-1.4.9-1.7-2.7-.3-5.6-1.3-5.6-6a4.7 4.7 0 011.2-3.3 4.4 4.4 0 01.1-3.3s1-.3 3.4 1.3a11.7 11.7 0 016.2 0c2.3-1.6 3.4-1.3 3.4-1.3a4.4 4.4 0 01.1 3.3 4.7 4.7 0 011.2 3.3c0 4.7-2.9 5.7-5.7 6 .5.4 1 1.2 1 2.5v3.7c0 .3.2.7.8.6A12 12 0 0012 .5z"/></svg>
+        GitHub</a>
+      <a href="https://www.reddit.com/r/weasco/" target="_blank">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12c0 5 3.1 9.3 7.5 11.1-.1-.9-.2-2.2.1-3.2.3-1 .2-3.3.2-3.3s-.6-1.2-.6-3c0-2.8 1.6-4.9 3.7-4.9 1.7 0 2.5 1.3 2.5 2.8 0 1.7-1.1 4.3-1.7 6.7-.5 2 .9 3.6 2.7 3.6 3.3 0 5.8-3.5 5.8-8.6 0-4.5-3.2-7.7-7.8-7.7-5.3 0-8.4 4-8.4 8.1 0 1.6.6 3.3 1.4 4.3.2.3.3.5.2.8-.2.9-.6 2.9-.7 3.3-.1.5-.4.6-.8.4C1.5 20.4 0 16.5 0 12 0 5.4 5.4 0 12 0s12 5.4 12 12z"/></svg>
+        Reddit</a>
+    </div></div></section>
 
 <div class="navhint" id="hint"></div>
 <footer>RedTux © 2026</footer>
@@ -93,7 +100,7 @@ footer{text-align:center;opacity:.5;padding:30px}
 (function(){
   const sections = document.querySelectorAll('section');
   window.go = function(i){ if(sections[i]) sections[i].scrollIntoView({behavior:'smooth'}); };
-  window.toggleTheme = function(){ document.body.classList.toggle('light'); };
+  window.toggleTheme = function(){};
   window.toggleFolder = function(){ const f=document.getElementById('files'); if(f) f.classList.toggle('open'); };
 
   const obs = new IntersectionObserver(entries=>{
