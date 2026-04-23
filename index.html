@@ -1,130 +1,794 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RedTux</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freedom — Stoat.chat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Liberation+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#000;--panel:#050505;--text:#fff;--muted:#8a8a8a;--border:#1a1a1a}
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'Geist',system-ui,Arial;transition:.35s cubic-bezier(.22,1,.36,1)}
+  :root {
+    --navy: #0d1b3e;
+    --navy-deep: #070e24;
+    --turquoise: #00b4a6;
+    --turquoise-dark: #008c81;
+    --white: #ffffff;
+    --black: #0a0a0a;
+    --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
 
-/* header */
-header{position:fixed;top:0;width:100%;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 44px;background:rgba(0,0,0,.78);backdrop-filter:blur(28px);border-bottom:1px solid var(--border);z-index:20}
-.nav-left{display:flex;gap:34px;font-size:20px}
-.brand{font-weight:700}
-.products,.aboutlink,.repolink{font-weight:300;opacity:.85;cursor:pointer}
-.products:hover,.aboutlink:hover,.repolink:hover{opacity:1}
-.theme{cursor:pointer;border:1px solid var(--border);padding:12px;border-radius:16px}
-.theme svg{width:22px;height:22px;fill:var(--text)}
+  html { scroll-behavior: smooth; }
 
-section{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:90px 24px;opacity:0;transform:translateY(35px);transition:.7s cubic-bezier(.22,1,.36,1)}
-section.visible{opacity:1;transform:none}
+  body {
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    background: #000;
+    color: var(--white);
+    overflow-x: hidden;
+  }
 
-/* HERO CAROUSEL */
-.hero{position:relative;overflow:hidden}
-.bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease}
-.bg.active{opacity:.45}
-.hero h1{position:relative;font-style:italic;font-size:66px;text-align:center;z-index:2}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.85) 70%,var(--bg));pointer-events:none}
-.hero span{display:block;font-size:18px;opacity:.6;margin-top:12px}
+  /* ─── PAGES ─────────────────────────────────────────── */
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: block; }
 
-/* cursor nav */
-.navhint{position:fixed;pointer-events:none;background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-size:14px;transform:translate(-50%,-50%);opacity:0;transition:.15s;z-index:30}
+  /* ─── HEADER ────────────────────────────────────────── */
+  #header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    transition: background var(--transition), backdrop-filter var(--transition);
+  }
 
-/* products tree */
-.tree{width:100%;max-width:900px;border:1px solid var(--border);border-radius:18px;padding:26px}
-.folder{cursor:pointer;font-weight:600;margin-bottom:10px}
-.files{display:none;margin-top:12px}
-.files.open{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
-.file{position:relative;overflow:hiddenborder:1px solid var(--border);border-radius:14px;padding:18px;transition:.2s}
-.file:hover{transform:translateY(-6px);box-shadow:0 0 0 1px rgba(255,255,255,.15),0 10px 30px rgba(255,255,255,.08)}
-.file button{margin-top:10px;padding:9px 14px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text)}
-.muted{color:var(--muted)}
-.links{display:flex;gap:22px}
-.links a{display:flex;gap:8px;align-items:center;color:var(--text);text-decoration:none}
-.links svg{width:18px;height:18px;fill:currentColor}
-.osicon{width:20px;height:20px;vertical-align:middle;margin-right:8px;filter:invert(1)}
-.file:hover .osicon{transform:scale(1.08)}
-footer{text-align:center;opacity:.5;padding:30px}
+  #header.home-header {
+    background: var(--navy);
+  }
+
+  #header.communities-header {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .header-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    border: none;
+    background: none;
+  }
+  .header-hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: var(--transition);
+  }
+  .header-hamburger:hover span { background: rgba(255,255,255,0.7); }
+
+  .header-logo {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ─── NAV DRAWER ────────────────────────────────────── */
+  #nav-drawer {
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    height: 100vh;
+    background: var(--navy-deep);
+    z-index: 2000;
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+    display: flex;
+    flex-direction: column;
+    padding: 80px 2rem 2rem;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  #nav-drawer.open { transform: translateX(0); }
+
+  .nav-close {
+    position: absolute;
+    top: 1.2rem; right: 1.2rem;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .nav-close:hover { opacity: 1; }
+
+  .nav-link {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    text-align: left;
+    width: 100%;
+  }
+  .nav-link:last-child { border-bottom: none; }
+  .nav-link:hover, .nav-link.active { color: var(--white); }
+  .nav-link.active { color: var(--turquoise); }
+
+  #nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1999;
+  }
+  #nav-overlay.show { display: block; }
+
+  /* ─── HOME PAGE ─────────────────────────────────────── */
+  #page-home { background: #000; }
+
+  /* ─── HERO ──────────────────────────────────────────── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: none;
+  }
+
+  #hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  #hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(7,14,36,0.55) 0%,
+      rgba(7,14,36,0.35) 50%,
+      rgba(7,14,36,0.7) 100%
+    );
+  }
+
+  #hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 720px;
+  }
+
+  #hero-content h1 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 700;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    color: var(--white);
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+    margin-bottom: 1.2rem;
+    text-shadow: 0 2px 32px rgba(0,0,0,0.4);
+  }
+
+  #hero-content p {
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: clamp(1rem, 2.2vw, 1.18rem);
+    color: rgba(255,255,255,0.88);
+    line-height: 1.65;
+    margin-bottom: 2.4rem;
+    text-shadow: 0 1px 12px rgba(0,0,0,0.5);
+  }
+
+  .btn-explore {
+    display: inline-block;
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.85rem 2.6rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.2s;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .btn-explore:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 36px rgba(0,0,0,0.45);
+  }
+
+  /* custom cursor on hero */
+  #hero-cursor {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+  }
+  #hero:hover #hero-cursor { opacity: 1; }
+
+  /* ─── EVENTS SECTION ────────────────────────────────── */
+  #events {
+    background: var(--white);
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  #events h2 {
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    color: var(--black);
+    font-weight: 400;
+    margin-bottom: 2rem;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-apply {
+    display: inline-block;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.85rem 2.6rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+  .btn-apply:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  }
+
+  /* ─── ARCHI SECTION ─────────────────────────────────── */
+  #archi {
+    background: var(--turquoise);
+    padding: 5rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #archi::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    pointer-events: none;
+  }
+
+  .archi-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: right;
+  }
+
+  #archi h2 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  #archi p {
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.92);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    text-align: right;
+  }
+
+  .btn-archi {
+    display: inline-block;
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.85rem 2.4rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  }
+  .btn-archi:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+  }
+
+  /* ─── COMMUNITIES PAGE ──────────────────────────────── */
+  #page-communities {
+    background: #000;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Main content area — shifts right to avoid dock */
+  #communities-content {
+    padding-top: 64px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 88px; /* dock width */
+  }
+
+  /* ─── BACKGROUND TITLE ──────────────────────────────── */
+  #bg-server-name {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 900;
+    font-size: clamp(5rem, 16vw, 14rem);
+    color: rgba(255,255,255,0.045);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+    letter-spacing: -0.03em;
+    transition: opacity 0.4s, color 0.4s;
+    text-align: center;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  /* ─── JOIN BUTTON (center) ──────────────────────────── */
+  #join-panel {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    pointer-events: none;
+  }
+
+  #join-panel.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .btn-join {
+    display: inline-block;
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Liberation Sans', Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0.9rem 3rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 28px rgba(0,0,0,0.5);
+  }
+  .btn-join:hover {
+    transform: scale(1.06);
+    box-shadow: 0 10px 44px rgba(0,0,0,0.7);
+  }
+
+  /* ─── DOCK ──────────────────────────────────────────── */
+  #dock {
+    position: fixed;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 14px 10px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .dock-item {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .dock-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+  }
+
+  .dock-item:hover { transform: scale(1.12); }
+  .dock-item.selected {
+    box-shadow: 0 0 0 2.5px rgba(255,255,255,0.65);
+    transform: scale(1.08);
+  }
+
+  /* ─── SCROLLBAR ─────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+  /* ─── ANIMATIONS ─────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .fade-up.d1 { animation-delay: 0.1s; }
+  .fade-up.d2 { animation-delay: 0.28s; }
+  .fade-up.d3 { animation-delay: 0.44s; }
+
+  /* ─── SECTION REVEAL ─────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: none;
+  }
 </style>
 </head>
 <body>
-<header>
-<div class="nav-left">
-<div class="brand">RedTux</div>
-<div class="products" onclick="go(1)">Products</div>
-<div class="aboutlink" onclick="go(2)">About Me</div>
-<div class="repolink" onclick="go(3)">Repo's & Subreddits</div>
-</div>
 
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header id="header" class="home-header">
+  <button class="header-hamburger" id="hamburger-btn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="header-center">
+    <!-- intentionally empty center slot -->
+  </div>
+  <div class="header-logo" id="header-logo" onclick="showPage('home')">Freedom</div>
 </header>
 
-<section class="hero">
-<div class="bg active" style="background-image:url('CARUSEL1.png')"></div>
-<div class="bg" style="background-image:url('CARUSEL2.png')"></div>
-<div class="bg" style="background-image:url('CARUSEL3.png')"></div>
-<div class="bg" style="background-image:url('CARUSEL4.png')"></div>
-<h1>“Bağımsız Geliştiriciyim”<span>- RedTux</span></h1>
-</section>
+<!-- ═══════════════════ NAV DRAWER ═══════════════════ -->
+<div id="nav-overlay"></div>
+<nav id="nav-drawer">
+  <button class="nav-close" id="nav-close-btn">×</button>
+  <button class="nav-link active" data-page="home">Home</button>
+  <button class="nav-link" data-page="communities">Communities</button>
+</nav>
 
-<section>
-<div class="tree">
-<div class="folder" onclick="toggleFolder()">Weasco/</div>
-<div class="files" id="files">
-<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/windows11.svg"> <b>Windows</b><br><a href="Weasco Setup 2.6.exe" download><button>Download</button></a></div>
-<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linux.svg"> <b>Linux</b><div class="muted">coming soon</div></div>
-<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg"> <b>Mac</b><div class="muted">coming soon</div></div>
-<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/android.svg"> <b>Android</b><div class="muted">coming but not soon</div></div>
-<div class="file"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/apple.svg"> <b>iOS</b><div class="muted">don't coming probably</div></div>
+<!-- ═══════════════════ HOME PAGE ═══════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section id="hero">
+    <div id="hero-cursor"></div>
+    <video id="hero-video" src="herosection.mp4" muted playsinline preload="auto"></video>
+    <div id="hero-overlay"></div>
+    <div id="hero-content">
+      <h1 class="fade-up d1">About Freedom</h1>
+      <p class="fade-up d2">Freedom (since 2024) is a Stoat.chat chat server that follows a free and fully libertarian perspective.</p>
+      <button class="btn-explore fade-up d3" id="explore-btn">Explore</button>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events" class="reveal">
+    <h2>Curator form</h2>
+    <a class="btn-apply" href="https://forms.gle/KrZ5kRabxe4TyRfc9" target="_blank" rel="noopener">Apply</a>
+  </section>
+
+  <!-- ARCHI -->
+  <section id="archi" class="reveal">
+    <div class="archi-inner">
+      <h2>About Archi</h2>
+      <p>Archi is a chat and moderation application designed for a community-wide stoat.chat. It was developed using RAG and fine-tuning.</p>
+      <a class="btn-archi" href="https://stoat.chat/bot/01KPXMXCYWKQKK4MBAXB4G7B7K" target="_blank" rel="noopener">Use Archi II</a>
+    </div>
+  </section>
+
 </div>
+
+<!-- ═══════════════════ COMMUNITIES PAGE ═══════════════════ -->
+<div id="page-communities" class="page">
+
+  <!-- giant background text -->
+  <div id="bg-server-name">Freedom</div>
+
+  <!-- dock -->
+  <div id="dock">
+    <div class="dock-item selected" id="dock-global" title="Freedom Global">
+      <img src="Freedom_Logo.png" alt="Freedom Global"
+           onerror="this.style.background='#0d1b3e';this.style.borderRadius='12px'">
+    </div>
+    <div class="dock-item" id="dock-tr" title="Freedom Turkey">
+      <img src="Freedom_Logo_Turkey.png" alt="Freedom Turkey"
+           onerror="this.style.background='#c8102e';this.style.borderRadius='12px'">
+    </div>
+    <div class="dock-item" id="dock-fr" title="Freedom France">
+      <img src="Freedom_Logo_French.png" alt="Freedom France"
+           onerror="this.style.background='#003189';this.style.borderRadius='12px'">
+    </div>
+  </div>
+
+  <!-- center join panel -->
+  <div id="communities-content">
+    <div id="join-panel" class="visible">
+      <a class="btn-join" id="join-btn" href="https://stt.gg/Wfp36ADa" target="_blank" rel="noopener">Join</a>
+    </div>
+  </div>
+
 </div>
-</section>
 
-<section class="about"><div class="tree"><h2>About me</h2><p>I am an independent young developer — amateur and inexperienced, yet I trust my potential. I study at MCO AIHL. Reach me via Reddit or GitHub. I value freedom and individual choice.</p></div></section>
-
-<section><div class="tree"><h2>Repo's & Subreddits</h2><div class="links">
-      <a href="https://github.com/TaxForRedTux/Weasco" target="_blank"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/github.svg">GitHub</a>
-      <a href="https://www.reddit.com/r/weasco/" target="_blank"><img class="osicon" src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/reddit.svg">Reddit</a>
-    </div></div></section>
-
-<div class="navhint" id="hint"></div>
-<footer>RedTux © 2026</footer>
 <script>
-(function(){
-  const sections = document.querySelectorAll('section');
-  window.go = function(i){ if(sections[i]) sections[i].scrollIntoView({behavior:'smooth'}); };
-  window.toggleTheme = function(){};
-  window.toggleFolder = function(){ const f=document.getElementById('files'); if(f) f.classList.toggle('open'); };
+// ═══════════════════════════════════════════════
+// PAGE SWITCHING
+// ═══════════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
 
-  const obs = new IntersectionObserver(entries=>{
-    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-  },{threshold:.15});
-  sections.forEach((s,idx)=>{ obs.observe(s); if(idx===0) s.classList.add('visible'); });
+  // header style
+  const header = document.getElementById('header');
+  if (name === 'communities') {
+    header.classList.remove('home-header');
+    header.classList.add('communities-header');
+    dock.style.display = 'flex';
+  } else {
+    header.classList.remove('communities-header');
+    header.classList.add('home-header');
+    dock.style.display = 'none';
+    // restart hero video
+    heroVideo.currentTime = 0;
+  }
 
-  let i=0; const bgs=document.querySelectorAll('.bg');
-  if(bgs.length){ setInterval(()=>{ bgs[i].classList.remove('active'); i=(i+1)%bgs.length; bgs[i].classList.add('active'); },10000); }
-
-  const hint=document.getElementById('hint');
-  document.addEventListener('mousemove',e=>{
-    if(!hint) return; const w=window.innerWidth;
-    if(e.clientX<80){ hint.textContent='Önceki'; hint.style.opacity=1; hint.style.left=e.clientX+20+'px'; hint.style.top=e.clientY+'px'; hint.dataset.dir='prev'; }
-    else if(e.clientX>w-80){ hint.textContent='Sonraki'; hint.style.opacity=1; hint.style.left=e.clientX-20+'px'; hint.style.top=e.clientY+'px'; hint.dataset.dir='next'; }
-    else{ hint.style.opacity=0; hint.dataset.dir=''; }
+  // nav drawer active state
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === name);
   });
 
-  document.addEventListener('click',()=>{
-    if(!hint||!hint.dataset.dir||!bgs.length) return;
-    bgs[i].classList.remove('active');
-    i = hint.dataset.dir==='prev' ? (i-1+bgs.length)%bgs.length : (i+1)%bgs.length;
-    bgs[i].classList.add('active');
+  closeNav();
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════
+// NAV DRAWER
+// ═══════════════════════════════════════════════
+const navDrawer   = document.getElementById('nav-drawer');
+const navOverlay  = document.getElementById('nav-overlay');
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const navCloseBtn  = document.getElementById('nav-close-btn');
+
+hamburgerBtn.addEventListener('click', () => {
+  navDrawer.classList.add('open');
+  navOverlay.classList.add('show');
+});
+
+function closeNav() {
+  navDrawer.classList.remove('open');
+  navOverlay.classList.remove('show');
+}
+
+navOverlay.addEventListener('click', closeNav);
+navCloseBtn.addEventListener('click', closeNav);
+
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => showPage(link.dataset.page));
+});
+
+// Explore button
+document.getElementById('explore-btn').addEventListener('click', () => showPage('communities'));
+
+// ═══════════════════════════════════════════════
+// HERO VIDEO — MOUSE SCRUB
+// ═══════════════════════════════════════════════
+const hero      = document.getElementById('hero');
+const heroVideo = document.getElementById('hero-video');
+const heroCursor = document.getElementById('hero-cursor');
+const exploreBtn = document.getElementById('explore-btn');
+
+let heroIntersecting = true;
+let videoDuration = 0;
+let mouseInHero = false;
+let cursorX = 0, cursorY = 0;
+let btnCenterX = 0, btnCenterY = 0;
+let maxDist = 200;
+
+heroVideo.addEventListener('loadedmetadata', () => {
+  videoDuration = heroVideo.duration;
+});
+
+// Intersection observer — reset to start if out of view
+const heroObserver = new IntersectionObserver(entries => {
+  heroIntersecting = entries[0].isIntersecting;
+  if (!heroIntersecting) {
+    heroVideo.currentTime = 0;
+  }
+}, { threshold: 0.3 });
+heroObserver.observe(hero);
+
+// Track cursor inside hero
+hero.addEventListener('mousemove', (e) => {
+  mouseInHero = true;
+  const rect = hero.getBoundingClientRect();
+  cursorX = e.clientX - rect.left;
+  cursorY = e.clientY - rect.top;
+
+  // move custom cursor
+  heroCursor.style.left = cursorX + 'px';
+  heroCursor.style.top  = cursorY + 'px';
+
+  // measure distance to explore button
+  const btnRect = exploreBtn.getBoundingClientRect();
+  btnCenterX = btnRect.left + btnRect.width  / 2 - rect.left;
+  btnCenterY = btnRect.top  + btnRect.height / 2 - rect.top;
+
+  const dx = cursorX - btnCenterX;
+  const dy = cursorY - btnCenterY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (videoDuration > 0) {
+    // close → advance toward end, far → retreat toward start
+    const t = Math.max(0, Math.min(1, 1 - dist / maxDist));
+    heroVideo.currentTime = t * videoDuration;
+  }
+});
+
+hero.addEventListener('mouseleave', () => {
+  mouseInHero = false;
+  // reset to start when mouse leaves
+  heroVideo.currentTime = 0;
+  heroCursor.style.left = '-999px';
+  heroCursor.style.top  = '-999px';
+});
+
+// ═══════════════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════════════
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('in-view');
   });
-})();
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ═══════════════════════════════════════════════
+// DOCK — Communities Page
+// ═══════════════════════════════════════════════
+const dock        = document.getElementById('dock');
+const bgName      = document.getElementById('bg-server-name');
+const joinPanel   = document.getElementById('join-panel');
+const joinBtn     = document.getElementById('join-btn');
+
+dock.style.display = 'none'; // hidden on home
+
+const servers = {
+  'dock-global': {
+    name: 'Freedom',
+    nameLabel: 'Freedom',
+    joinText: 'Join',
+    link: 'https://stt.gg/Wfp36ADa',
+    logoNormal:  'Freedom_Logo.png',
+    logoClicked: 'Freedom_Logo_Clicked.png',
+  },
+  'dock-tr': {
+    name: 'Freedom Türkiye',
+    nameLabel: 'Freedom Türkiye',
+    joinText: 'Katıl',
+    link: 'https://stt.gg/f4HFF3VS',
+    logoNormal:  'Freedom_Logo_Turkey.png',
+    logoClicked: 'Freedom_Logo_Turkey_Clicked.png',
+  },
+  'dock-fr': {
+    name: 'Freedom France',
+    nameLabel: 'Freedom France',
+    joinText: 'Rejoindre',
+    link: 'https://stt.gg/YPaTXvX4',
+    logoNormal:  'Freedom_Logo_French.png',
+    logoClicked: 'Freedom_Logo_French_Clicked.png',
+  },
+};
+
+let selectedDock = 'dock-global';
+
+function selectDock(id) {
+  // reset all logos to normal
+  Object.entries(servers).forEach(([dockId, srv]) => {
+    const img = document.querySelector(`#${dockId} img`);
+    if (img) img.src = srv.logoNormal;
+    document.getElementById(dockId).classList.remove('selected');
+  });
+
+  selectedDock = id;
+  const srv = servers[id];
+
+  // switch to clicked logo
+  const img = document.querySelector(`#${id} img`);
+  if (img) img.src = srv.logoClicked;
+  document.getElementById(id).classList.add('selected');
+
+  // update bg text
+  bgName.textContent = srv.nameLabel;
+
+  // update join button
+  joinBtn.textContent = srv.joinText;
+  joinBtn.href = srv.link;
+
+  // animate panel
+  joinPanel.classList.remove('visible');
+  setTimeout(() => joinPanel.classList.add('visible'), 60);
+}
+
+Object.keys(servers).forEach(id => {
+  document.getElementById(id).addEventListener('click', () => selectDock(id));
+});
 </script>
 </body>
 </html>
-
