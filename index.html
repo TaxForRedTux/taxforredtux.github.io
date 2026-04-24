@@ -11,250 +11,265 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --navy:#0d1b3e;--navy-deep:#070e24;--teal:#00b4a6;
-  --white:#fff;--black:#0a0a0a;
+  --navy:#0d1b3e;
+  --navy-deep:#070e24;
+  --white:#fff;
+  --black:#0a0a0a;
   --serif:'Georgia','Times New Roman',serif;
   --sans:'Geist','Arial',sans-serif;
-  --trans:0.38s cubic-bezier(.25,.46,.45,.94);
+  --trans:.38s cubic-bezier(.25,.46,.45,.94);
+  --archi-bg:#2c1f0e;
+  --archi-bg-light:#3d2c14;
+  --olive:#3b4a2f;
+  --gold:#D2B450;
 }
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:#000;color:var(--white);overflow-x:hidden}
 .page{display:none;min-height:100vh}
 .page.active{display:block}
 
-/* ── HEADER ── */
+/* ══════════ HEADER ══════════ */
 #header{
-  position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;
+  position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;
   display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-  padding:0 1.6rem;
+  padding:0 2rem;
+  background:transparent;
+  border-bottom:1.5px solid rgba(255,255,255,0.55);
+  transition:background var(--trans),border-color var(--trans),backdrop-filter var(--trans);
+}
+#header.scrolled-header{
   background:var(--navy);
-  transition:background var(--trans),backdrop-filter var(--trans);
+  border-bottom:1.5px solid rgba(255,255,255,0.1);
 }
 #header.comm-header{
   background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1.5px solid rgba(255,255,255,0.1);
 }
-#header.fr-header{background:#5c3a1e}
 
-.header-left{display:flex;align-items:center}
-.hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
-.hamburger span{display:block;width:24px;height:2px;background:var(--white);border-radius:2px;transition:var(--trans)}
+.h-left{display:flex;align-items:center}
+.h-hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none}
+.h-hamburger img{width:22px;height:22px;filter:invert(1);display:block}
 
-.header-center{
-  display:flex;align-items:center;gap:8px;
-  justify-content:center;cursor:pointer;user-select:none;position:relative;
-}
-.hc-logo{width:34px;height:34px;object-fit:contain}
-.hc-chevron{
-  color:var(--white);font-size:0.95rem;line-height:1;
-  display:inline-block;
-  transform:rotate(90deg);
-  transition:transform 0.28s ease;
-  font-style:normal;
-}
-.hc-chevron.open{transform:rotate(0deg)}
+.h-center{display:flex;align-items:center;gap:8px;justify-content:center;cursor:pointer;user-select:none;position:relative}
+.hc-logo{width:36px;height:36px;object-fit:contain;transition:opacity .2s}
+.hc-arrow{width:18px;height:18px;display:block;transition:transform .28s ease;filter:invert(1)}
+.hc-arrow.open{transform:rotate(180deg)}
 
-.header-right{display:flex;justify-content:flex-end}
-.lang-label{font-size:0.75rem;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase}
+.h-right{display:flex;justify-content:flex-end}
+.lang-lbl{font-size:.73rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase}
 
-/* dropdown */
+/* header dropdown */
 #hdr-drop{
   position:absolute;top:calc(100% + 10px);left:50%;
-  transform:translateX(-50%) scaleY(0.88);transform-origin:top;
-  background:rgba(8,10,22,0.94);backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.1);border-radius:12px;
+  transform:translateX(-50%) scaleY(.88);transform-origin:top;
+  background:rgba(6,8,20,.95);backdrop-filter:blur(22px);
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;
   padding:8px;display:flex;flex-direction:column;gap:4px;
-  opacity:0;pointer-events:none;min-width:190px;z-index:3000;
-  transition:opacity 0.22s ease,transform 0.22s ease;
+  opacity:0;pointer-events:none;min-width:195px;z-index:3000;
+  transition:opacity .22s,transform .22s;
 }
 #hdr-drop.open{opacity:1;pointer-events:auto;transform:translateX(-50%) scaleY(1)}
-.drop-item{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 10px;border-radius:7px;cursor:pointer;
-  background:none;border:none;text-align:left;width:100%;
-  transition:background 0.15s;
-}
-.drop-item:hover{background:rgba(255,255,255,0.07)}
+.drop-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;cursor:pointer;background:none;border:none;text-align:left;width:100%;transition:background .15s}
+.drop-item:hover{background:rgba(255,255,255,.07)}
 .drop-item img{width:26px;height:26px;object-fit:contain;border-radius:5px}
-.drop-item span{font-family:var(--sans);font-size:0.85rem;color:rgba(255,255,255,0.82)}
+.drop-item span{font-family:var(--sans);font-size:.84rem;color:rgba(255,255,255,.82)}
 
-/* ── NAV DRAWER ── */
-#nav-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1500}
+/* ══════════ NAV DRAWER ══════════ */
+#nav-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1500}
 #nav-ov.show{display:block}
 #nav-dr{
-  position:fixed;top:0;left:0;width:265px;height:100vh;
+  position:fixed;top:0;left:0;width:270px;height:100vh;
   background:var(--navy-deep);z-index:1600;
   transform:translateX(-100%);transition:transform var(--trans);
-  display:flex;flex-direction:column;padding:78px 1.8rem 2rem;
-  border-right:1px solid rgba(255,255,255,0.05);
+  display:flex;flex-direction:column;padding:80px 1.8rem 2rem;
+  border-right:1px solid rgba(255,255,255,.05);
 }
 #nav-dr.open{transform:translateX(0)}
-.nav-x{position:absolute;top:1.2rem;right:1.2rem;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.6rem;cursor:pointer;transition:color .2s}
+.nav-x{position:absolute;top:1.2rem;right:1.2rem;background:none;border:none;color:rgba(255,255,255,.4);font-size:1.6rem;cursor:pointer;transition:color .2s}
 .nav-x:hover{color:var(--white)}
-.nav-lnk{
-  font-family:var(--sans);font-weight:500;font-size:1.45rem;
-  color:rgba(255,255,255,0.38);background:none;
-  border:none;border-bottom:1px solid rgba(255,255,255,0.05);
-  padding:0.75rem 0;cursor:pointer;text-align:left;width:100%;
-  transition:color .2s;
-}
+.nav-lnk{font-family:var(--sans);font-weight:500;font-size:1.45rem;color:rgba(255,255,255,.36);background:none;border:none;border-bottom:1px solid rgba(255,255,255,.05);padding:.75rem 0;cursor:pointer;text-align:left;width:100%;transition:color .2s}
 .nav-lnk:last-child{border-bottom:none}
-.nav-lnk:hover{color:rgba(255,255,255,0.7)}
+.nav-lnk:hover{color:rgba(255,255,255,.72)}
 .nav-lnk.active{color:var(--white)}
 
-/* ── HERO ── */
-#hero{
-  position:relative;height:100vh;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-}
+/* ══════════ HERO ══════════ */
+#hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
-#hero-ov{
-  position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(7,14,36,.52) 0%,rgba(7,14,36,.28) 50%,rgba(7,14,36,.72) 100%);
-}
-#hero-cnt{
-  position:relative;z-index:2;
-  text-align:center;padding:0 1.5rem;max-width:740px;
-}
+#hero-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(7,14,36,.48) 0%,rgba(7,14,36,.22) 50%,rgba(7,14,36,.75) 100%)}
+#hero-cnt{position:relative;z-index:2;text-align:center;padding:0 1.5rem;max-width:760px}
 #hero-cnt h1{
   font-family:var(--serif);font-weight:700;
-  font-size:clamp(3rem,8vw,5.2rem);color:var(--white);
-  line-height:1.06;margin-bottom:1.2rem;
-  text-shadow:0 2px 40px rgba(0,0,0,.5);
+  font-size:clamp(3.2rem,9vw,5.8rem);color:var(--white);
+  line-height:1.05;margin-bottom:1.3rem;
+  text-shadow:0 2px 48px rgba(0,0,0,.5);
+  letter-spacing:-.01em;
 }
 #hero-cnt p{
   font-family:var(--sans);font-size:clamp(1rem,2vw,1.13rem);
-  color:rgba(255,255,255,.86);line-height:1.7;margin-bottom:2.4rem;
-  text-shadow:0 1px 14px rgba(0,0,0,.5);
+  color:rgba(255,255,255,.85);line-height:1.72;margin-bottom:2.6rem;
+  text-shadow:0 1px 16px rgba(0,0,0,.5);
 }
-
-/* pill buttons */
-.btn{
-  display:inline-block;font-family:var(--sans);font-size:1rem;font-weight:600;
-  padding:.88rem 2.8rem;border-radius:999px;border:none;cursor:pointer;
-  text-decoration:none;letter-spacing:.02em;
-  transition:transform .22s,box-shadow .22s;
-}
+.btn{display:inline-block;font-family:var(--sans);font-size:1rem;font-weight:600;padding:.9rem 2.8rem;border-radius:999px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.02em;transition:transform .22s,box-shadow .22s}
 .btn-w{background:var(--white);color:var(--black);box-shadow:0 4px 24px rgba(0,0,0,.35)}
-.btn-w:hover{transform:scale(1.05);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.btn-w:hover{transform:scale(1.05);box-shadow:0 10px 42px rgba(0,0,0,.5)}
 .btn-b{background:var(--black);color:var(--white);box-shadow:0 4px 18px rgba(0,0,0,.25)}
 .btn-b:hover{transform:scale(1.05);box-shadow:0 8px 30px rgba(0,0,0,.4)}
 
-/* ── EVENTS ── */
-#events{
+/* ══════════ NEWS TICKER ══════════ */
+#ticker-wrap{
+  background:var(--white);overflow:hidden;
+  height:42px;display:flex;align-items:center;
+  border-top:1px solid rgba(0,0,0,.08);
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.ticker-track{
+  display:flex;align-items:center;
+  white-space:nowrap;
+  animation:tickerMove 38s linear infinite;
+  gap:0;
+}
+#ticker-wrap:hover .ticker-track{animation-play-state:paused}
+.ticker-item{
+  font-family:var(--sans);font-size:.8rem;font-weight:600;
+  color:var(--black);letter-spacing:.04em;text-transform:uppercase;
+  padding:0 1.2rem;
+}
+.ticker-sep{
+  font-family:var(--sans);font-size:.85rem;font-weight:700;
+  color:var(--navy);padding:0 .3rem;
+}
+@keyframes tickerMove{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* ══════════ CAROUSEL (Events + Announcements) ══════════ */
+#carousel-section{position:relative;overflow:hidden}
+.carousel-track{
+  display:flex;transition:transform .55s cubic-bezier(.44,.19,.12,1);
+  will-change:transform;
+}
+.c-slide{min-width:100%;position:relative}
+
+/* Slide 1 — Curator */
+#slide-curator{
   background:var(--white);min-height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:6rem 2rem;text-align:center;
 }
-#events h2{
-  font-family:var(--sans);font-weight:400;
-  font-size:clamp(1.8rem,4vw,2.8rem);color:var(--black);margin-bottom:2.2rem;
-}
+#slide-curator h2{font-family:var(--sans);font-weight:400;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--black);margin-bottom:.8rem}
+.curator-meta{font-family:var(--sans);font-size:.88rem;color:rgba(0,0,0,.45);letter-spacing:.04em;margin-bottom:2.2rem;line-height:1.8}
 
-/* ── ARCHI ── */
+/* Slide 2 — Archi II dev */
+#slide-archi{
+  background:var(--archi-bg-light);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6rem 2rem;text-align:center;
+}
+#slide-archi h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,4.5vw,3rem);color:var(--white);margin-bottom:1.2rem}
+#slide-archi p{font-family:var(--sans);font-size:1.05rem;color:rgba(255,255,255,.82);line-height:1.75;max-width:640px}
+
+/* Slide 3 — ELO */
+#slide-elo{
+  background:var(--olive);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:6rem 2rem;text-align:center;
+}
+#slide-elo h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.9rem,4.5vw,3rem);color:var(--gold);margin-bottom:1.2rem}
+#slide-elo p{font-family:var(--sans);font-size:1.05rem;color:rgba(255,255,255,.84);line-height:1.75;max-width:640px}
+
+/* carousel arrows */
+.c-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  z-index:10;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);color:var(--white);
+  width:44px;height:44px;border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;transition:background .2s;
+  user-select:none;
+}
+.c-arrow:hover{background:rgba(255,255,255,.22)}
+.c-prev{left:1.2rem}.c-next{right:1.2rem}
+.c-dots{
+  position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:8px;z-index:10;
+}
+.c-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:background .2s,transform .2s}
+.c-dot.on{background:rgba(255,255,255,.9);transform:scale(1.25)}
+
+/* ══════════ ARCHI MAIN SECTION ══════════ */
 #archi{
-  background:#00b4a6;min-height:100vh;
-  display:flex;align-items:center;
-  padding:6rem 2rem;position:relative;overflow:hidden;
+  background:var(--archi-bg);min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  padding:4rem 2rem;
 }
-#archi::before{
-  content:'';position:absolute;top:-100px;left:-100px;
-  width:380px;height:380px;border-radius:50%;
-  background:rgba(255,255,255,.06);pointer-events:none;
+.archi-svg-bg{
+  position:absolute;top:2rem;right:2rem;
+  width:clamp(80px,12vw,160px);height:auto;
+  opacity:.9;pointer-events:none;
 }
-.archi-in{max-width:660px}
-#archi h2{
+.archi-main-inner{text-align:center;position:relative;z-index:2;max-width:700px;width:100%}
+.archi-big-title{
   font-family:var(--serif);font-weight:700;
-  font-size:clamp(2rem,5vw,3rem);color:var(--white);
-  margin-bottom:1.1rem;text-align:left;
+  font-size:clamp(5rem,18vw,12rem);
+  color:var(--white);line-height:.95;
+  letter-spacing:-.03em;margin-bottom:2rem;
+  text-shadow:0 4px 80px rgba(0,0,0,.4);
 }
 #archi p{
-  font-family:var(--sans);font-size:1.06rem;
-  color:rgba(255,255,255,.9);line-height:1.72;
-  margin-bottom:2.2rem;text-align:left;
+  font-family:var(--sans);font-size:1.05rem;
+  color:rgba(255,255,255,.82);line-height:1.75;
+  margin-bottom:2.4rem;text-align:center;
 }
+.archi-btn-row{display:flex;justify-content:center}
 
-/* ── COMMUNITIES ── */
+/* ══════════ COMMUNITIES ══════════ */
 #page-communities{background:#000;min-height:100vh;position:relative}
 
-/* dock: left side, square corners, transparent white */
 #dock{
   position:fixed;left:16px;top:50%;transform:translateY(-50%);
   z-index:500;display:none;flex-direction:column;
   align-items:center;gap:10px;
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.1);
   border-radius:0;padding:14px 10px;
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
 }
 #dock.vis{display:flex}
-.d-item{
-  width:46px;height:46px;cursor:pointer;overflow:hidden;
-  border-radius:4px;transition:transform .18s,opacity .18s;flex-shrink:0;
-}
+.d-item{width:46px;height:46px;cursor:pointer;overflow:hidden;border-radius:4px;transition:transform .18s;flex-shrink:0}
 .d-item img{width:100%;height:100%;object-fit:cover;display:block}
 .d-item:hover{transform:scale(1.1)}
 
-/* banner */
-#c-banner{
-  position:relative;z-index:2;width:100%;
-  display:flex;justify-content:center;
-  padding:88px 80px 0;
-}
-#c-banner img{
-  width:100%;max-width:900px;height:auto;border-radius:10px;
-  display:block;object-fit:cover;
-}
+#c-banner{position:relative;z-index:2;width:100%;display:flex;justify-content:center;padding:88px 80px 0}
+#c-banner img{width:100%;max-width:900px;height:auto;border-radius:10px;display:block;object-fit:cover}
 
-/* bg text */
 #bg-nm{
-  position:fixed;top:50%;left:50%;
-  transform:translate(-50%,-50%);
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
   font-family:var(--serif);font-weight:900;
   font-size:clamp(4rem,14vw,12rem);
   color:rgba(255,255,255,.04);
-  white-space:nowrap;pointer-events:none;z-index:1;
-  letter-spacing:-.03em;text-align:center;width:100%;
+  white-space:nowrap;pointer-events:none;z-index:1;letter-spacing:-.03em;text-align:center;width:100%;
 }
-
-/* server title */
 #srv-title{
-  position:relative;z-index:3;text-align:center;
-  padding:2.5rem 80px 0;
+  position:relative;z-index:3;text-align:center;padding:2.5rem 80px 0;
   font-family:var(--serif);font-weight:700;
   font-size:clamp(2.2rem,6vw,4.5rem);
   color:rgba(255,255,255,.9);letter-spacing:-.01em;
   transition:opacity .28s,transform .28s;
 }
-
-/* join button: bottom right, small */
-#join-wrap{
-  position:fixed;bottom:2rem;right:2rem;
-  z-index:500;display:none;
-}
+#join-wrap{position:fixed;bottom:2rem;right:2rem;z-index:500;display:none}
 #join-wrap.vis{display:block}
-#join-a{
-  display:inline-block;background:var(--white);color:var(--black);
-  font-family:var(--sans);font-size:.9rem;font-weight:700;
-  padding:.65rem 1.7rem;border-radius:999px;text-decoration:none;
-  letter-spacing:.02em;border:none;cursor:pointer;
-  box-shadow:0 4px 28px rgba(0,0,0,.55);
-  transition:transform .2s,box-shadow .2s;
-}
+#join-a{display:inline-block;background:var(--white);color:var(--black);font-family:var(--sans);font-size:.88rem;font-weight:700;padding:.65rem 1.7rem;border-radius:999px;text-decoration:none;letter-spacing:.02em;border:none;cursor:pointer;box-shadow:0 4px 28px rgba(0,0,0,.55);transition:transform .2s,box-shadow .2s}
 #join-a:hover{transform:scale(1.07);box-shadow:0 10px 42px rgba(0,0,0,.7)}
 
-/* reveal */
+/* ══════════ REVEAL ══════════ */
 .rev{opacity:0;transform:translateY(32px);transition:opacity .72s ease,transform .72s ease}
 .rev.in{opacity:1;transform:none}
 
-/* fade up anim */
+/* fade up */
 @keyframes fu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 .fu{animation:fu .7s cubic-bezier(.22,1,.36,1) both}
 .d1{animation-delay:.08s}.d2{animation-delay:.22s}.d3{animation-delay:.38s}
 
-/* scrollbar */
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:#000}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
@@ -262,17 +277,18 @@ body{font-family:var(--sans);background:#000;color:var(--white);overflow-x:hidde
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ═══════ HEADER ═══════ -->
 <header id="header">
-  <div class="header-left">
-    <button class="hamburger" id="hbg" aria-label="Menu">
-      <span></span><span></span><span></span>
+  <div class="h-left">
+    <button class="h-hamburger" id="hbg" aria-label="Menu">
+      <img src="menu.svg" alt="menu" onerror="this.parentElement.innerHTML='<span style=font-size:1.3rem;color:#fff>☰</span>'">
     </button>
   </div>
 
-  <div class="header-center" id="hdr-ctr">
-    <img class="hc-logo" src="Freedom_Logo.png" alt="Freedom" onerror="this.style.display='none'">
-    <i class="hc-chevron" id="hc-chev">&#62;</i>
+  <div class="h-center" id="hdr-ctr">
+    <img class="hc-logo" id="hc-logo" src="Freedom_Logo.png" alt="Freedom" onerror="this.style.display='none'">
+    <img class="hc-arrow" id="hc-arrow" src="arrow_down4.svg" alt="▾"
+         onerror="this.outerHTML='<span id=hc-arrow class=hc-chevron-txt>›</span>'">
     <div id="hdr-drop">
       <button class="drop-item" onclick="setLang('en')">
         <img src="Freedom_Logo.png" alt="" onerror="this.style.background='#0d1b3e'">
@@ -289,12 +305,12 @@ body{font-family:var(--sans);background:#000;color:var(--white);overflow-x:hidde
     </div>
   </div>
 
-  <div class="header-right">
-    <span class="lang-label" id="lang-lbl">EN</span>
+  <div class="h-right">
+    <span class="lang-lbl" id="lang-lbl">EN</span>
   </div>
 </header>
 
-<!-- NAV DRAWER -->
+<!-- ═══════ NAV DRAWER ═══════ -->
 <div id="nav-ov"></div>
 <nav id="nav-dr">
   <button class="nav-x" id="nav-x">×</button>
@@ -302,9 +318,10 @@ body{font-family:var(--sans);background:#000;color:var(--white);overflow-x:hidde
   <button class="nav-lnk"        data-p="communities" id="nl-c">Communities</button>
 </nav>
 
-<!-- HOME PAGE -->
+<!-- ═══════ HOME PAGE ═══════ -->
 <div id="page-home" class="page active">
 
+  <!-- HERO -->
   <section id="hero">
     <video id="hero-vid" src="herosection.mp4" muted autoplay loop playsinline preload="auto"></video>
     <div id="hero-ov"></div>
@@ -315,64 +332,129 @@ body{font-family:var(--sans);background:#000;color:var(--white);overflow-x:hidde
     </div>
   </section>
 
-  <section id="events" class="rev">
-    <h2 id="cur-title">Curator form</h2>
-    <a id="cur-btn" class="btn btn-b"
-       href="https://forms.gle/KrZ5kRabxe4TyRfc9" target="_blank" rel="noopener">Apply</a>
-  </section>
+  <!-- NEWS TICKER -->
+  <div id="ticker-wrap">
+    <div class="ticker-track" id="ticker-track">
+      <!-- filled by JS -->
+    </div>
+  </div>
 
+  <!-- CAROUSEL -->
+  <div id="carousel-section">
+    <div class="carousel-track" id="car-track">
+
+      <!-- SLIDE 1: Curator Form -->
+      <div class="c-slide" id="slide-curator">
+        <h2 id="cur-title">Curator form</h2>
+        <div class="curator-meta" id="cur-meta">Last application date: July 1, 2026<br>Number of questions: 8</div>
+        <a id="cur-btn" class="btn btn-b" href="https://forms.gle/KrZ5kRabxe4TyRfc9" target="_blank" rel="noopener">Apply</a>
+      </div>
+
+      <!-- SLIDE 2: Archi II dev -->
+      <div class="c-slide" id="slide-archi">
+        <h2 id="sl2-title">Archi-II is in development</h2>
+        <p id="sl2-desc">Archi-II has started development and is planned to be completed by mid-May. This model, with a large data and language base, is preparing to become Stoat.chat's most powerful AI assistant. As it comes from the Freedom team, it is expected to be quite sharp-tongued and critical.</p>
+      </div>
+
+      <!-- SLIDE 3: ELO -->
+      <div class="c-slide" id="slide-elo">
+        <h2 id="sl3-title">New ranking system coming soon!</h2>
+        <p id="sl3-desc">Users will be subject to an elo classification based on their message activity. Each inactive day costs -30 elo, while each message adds +0.5 elo. Ranks will be determined by elo levels, but these ranks are purely seniority-based and will not affect permissions.</p>
+      </div>
+
+    </div>
+
+    <!-- nav arrows -->
+    <button class="c-arrow c-prev" id="car-prev">&#8249;</button>
+    <button class="c-arrow c-next" id="car-next">&#8250;</button>
+    <div class="c-dots" id="car-dots"></div>
+  </div>
+
+  <!-- ARCHI MAIN -->
   <section id="archi" class="rev">
-    <div class="archi-in">
-      <h2 id="ar-title">About Archi</h2>
-      <p  id="ar-desc">Archi is a chat and moderation application designed for a community-wide stoat.chat. It was developed using RAG and fine-tuning.</p>
-      <a id="ar-btn" class="btn btn-w"
-         href="https://stoat.chat/bot/01KPXMXCYWKQKK4MBAXB4G7B7K" target="_blank" rel="noopener">Use Archi II</a>
+    <!-- Archi.svg top right -->
+    <img class="archi-svg-bg" src="Archi.svg" alt=""
+         onerror="this.style.display='none'">
+    <div class="archi-main-inner">
+      <div class="archi-big-title">Archi</div>
+      <p id="ar-desc">Archi is a chat and moderation application designed for a community-wide stoat.chat. It was developed using RAG and fine-tuning.</p>
+      <div class="archi-btn-row">
+        <a id="ar-btn" class="btn btn-w" href="https://stoat.chat/bot/01KPXMXCYWKQKK4MBAXB4G7B7K" target="_blank" rel="noopener">Use Archi II</a>
+      </div>
     </div>
   </section>
 
 </div>
 
-<!-- COMMUNITIES PAGE -->
+<!-- ═══════ COMMUNITIES PAGE ═══════ -->
 <div id="page-communities" class="page">
-
-  <!-- dock: left, square -->
   <div id="dock">
-    <div class="d-item" id="dk-gl">
-      <img src="Freedom_Logo.png" alt="Global" onerror="this.style.background='#0d1b3e'">
-    </div>
-    <div class="d-item" id="dk-tr">
-      <img src="Freedom_Turkey_Logo.png" alt="Turkey" onerror="this.style.background='#c8102e'">
-    </div>
-    <div class="d-item" id="dk-fr">
-      <img src="Freedom_French_Logo.png" alt="France" onerror="this.style.background='#003189'">
-    </div>
+    <div class="d-item" id="dk-gl"><img src="Freedom_Logo.png" alt="Global" onerror="this.style.background='#0d1b3e'"></div>
+    <div class="d-item" id="dk-tr"><img src="Freedom_Turkey_Logo.png" alt="Turkey" onerror="this.style.background='#c8102e'"></div>
+    <div class="d-item" id="dk-fr"><img src="Freedom_French_Logo.png" alt="France" onerror="this.style.background='#003189'"></div>
   </div>
-
-  <!-- bg text -->
   <div id="bg-nm">Freedom</div>
-
-  <!-- banner top -->
-  <div id="c-banner">
-    <img id="c-ban-img" src="BANNERFREEDOM.png" alt=""
-         onerror="this.style.display='none'">
-  </div>
-
-  <!-- server title center -->
+  <div id="c-banner"><img id="c-ban-img" src="BANNERFREEDOM.png" alt="" onerror="this.style.display='none'"></div>
   <div id="srv-title">Freedom</div>
-
-  <!-- join btn bottom right, small -->
-  <div id="join-wrap" class="vis">
-    <a id="join-a" href="https://stt.gg/Wfp36ADa" target="_blank" rel="noopener">Join</a>
-  </div>
-
+  <div id="join-wrap" class="vis"><a id="join-a" href="https://stt.gg/Wfp36ADa" target="_blank" rel="noopener">Join</a></div>
 </div>
 
 <script>
-/* ── DATA ── */
+/* ════════════════════════════════
+   DATA
+════════════════════════════════ */
 const T = {
-  en:{heroT:'About Freedom',heroD:'Freedom (since 2024) is a Stoat.chat chat server that follows a free and fully libertarian perspective.',expl:'Explore',curT:'Curator form',curB:'Apply',arT:'About Archi',arD:"Archi is a chat and moderation application designed for a community-wide stoat.chat. It was developed using RAG and fine-tuning.",arB:'Use Archi II',nlH:'Home',nlC:'Communities',lbl:'EN'},
-  tr:{heroT:'Freedom Hakkında',heroD:"Freedom (2024'ten beri), özgür ve tam liberteryenist bir bakış açısını benimseyen bir Stoat.chat sohbet sunucusudur.",expl:'Keşfet',curT:'Küratör formu',curB:'Başvur',arT:'Archi Hakkında',arD:'Archi, topluluk genelinde stoat.chat için tasarlanmış bir sohbet ve moderasyon uygulamasıdır. RAG ve ince ayar kullanılarak geliştirilmiştir.',arB:"Archi II'yi Kullan",nlH:'Ana Sayfa',nlC:'Topluluklar',lbl:'TR'},
-  fr:{heroT:'À propos de Freedom',heroD:"Freedom (depuis 2024) est un serveur de chat Stoat.chat qui suit une perspective libre et entièrement libertarienne.",expl:'Explorer',curT:'Formulaire curateur',curB:'Postuler',arT:"À propos d'Archi",arD:"Archi est une application de chat et de modération conçue pour un stoat.chat à l'échelle communautaire. Elle a été développée avec RAG et fine-tuning.",arB:'Utiliser Archi II',nlH:'Accueil',nlC:'Communautés',lbl:'FR'},
+  en:{
+    heroT:'About Freedom',
+    heroD:'Freedom (since 2024) is a Stoat.chat chat server that follows a free and fully libertarian perspective.',
+    expl:'Explore',
+    curT:'Curator form',
+    curMeta:'Last application date: July 1, 2026<br>Number of questions: 8',
+    curB:'Apply',
+    sl2T:'Archi-II is in development',
+    sl2D:"Archi-II has started development and is planned to be completed by mid-May. This model, with a large data and language base, is preparing to become Stoat.chat's most powerful AI assistant. As it comes from the Freedom team, it is expected to be quite sharp-tongued and critical.",
+    sl3T:'New ranking system coming soon!',
+    sl3D:'Users will be subject to an elo classification based on their message activity. Each inactive day costs -30 elo, while each message adds +0.5 elo. Ranks will be determined by elo levels, but these ranks are purely seniority-based and will not affect permissions.',
+    arD:'Archi is a chat and moderation application designed for a community-wide stoat.chat. It was developed using RAG and fine-tuning.',
+    arB:'Use Archi II',
+    nlH:'Home',nlC:'Communities',lbl:'EN',
+    logo:'Freedom_Logo.png',
+    ticker:'FREEDOM KULLANIMA AÇILDI<sep>YETKİLİ ALIMLARINDAN HABERDAR OL!<sep>ANNELER GÜNÜNE ÖZEL "HAYIRLI EVLAT" RÜTBESİ GELECEK<sep>ARCHI II GELİŞTİRİLME SÜRECİ İLERLİYOR<sep>SUNUCU KURULUMU YAPILIYOR',
+  },
+  tr:{
+    heroT:'Freedom Hakkında',
+    heroD:"Freedom (2024'ten beri), özgür ve tam liberteryenist bir bakış açısını benimseyen bir Stoat.chat sohbet sunucusudur.",
+    expl:'Keşfet',
+    curT:'Küratör formu',
+    curMeta:'Son başvuru tarihi: 1 Temmuz 2026<br>Soru sayısı: 8',
+    curB:'Başvur',
+    sl2T:'Archi-II geliştirme aşamasında',
+    sl2D:'Archi-II geliştirilmeye başlandı ve Mayıs\'ın ortalarında bitmesi planlanıyor. Büyük bir veri ve dil haznesine sahip olacak bu model, Stoat.chat\'in en güçlü yapay zeka asistanı olmaya hazırlanıyor. Freedom ekibinin elinden çıktığı için oldukça sivri dilli ve eleştirel olması bekleniyor.',
+    sl3T:'Yeni rütbelendirme sistemi yakında!',
+    sl3D:'Kullanıcılar yazdıkları mesaj yoğunluğuna göre bir elo sınıflandırmasına tabi tutulacak. Aktif olunmayan gün elo -30 eksilirken mesaj başı +0.5 elo eklenecek. Elo\'lara göre rütbeler belirlenecek fakat bu rütbeler sadece kıdem üzerine kurulu olup, yetkiyi etkilemeyecek.',
+    arD:'Archi, topluluk genelinde stoat.chat için tasarlanmış bir sohbet ve moderasyon uygulamasıdır. RAG ve ince ayar kullanılarak geliştirilmiştir.',
+    arB:"Archi II'yi Kullan",
+    nlH:'Ana Sayfa',nlC:'Topluluklar',lbl:'TR',
+    logo:'Freedom_Turkey_Logo.png',
+    ticker:'FREEDOM KULLANIMA AÇILDI<sep>YETKİLİ ALIMLARINDAN HABERDAR OL!<sep>ANNELER GÜNÜNE ÖZEL "HAYIRLI EVLAT" RÜTBESİ GELECEK<sep>ARCHI II GELİŞTİRİLME SÜRECİ İLERLİYOR<sep>SUNUCU KURULUMU YAPILIYOR',
+  },
+  fr:{
+    heroT:'À propos de Freedom',
+    heroD:"Freedom (depuis 2024) est un serveur de chat Stoat.chat qui suit une perspective libre et entièrement libertarienne.",
+    expl:'Explorer',
+    curT:'Formulaire curateur',
+    curMeta:'Date limite de candidature : 1er juillet 2026<br>Nombre de questions : 8',
+    curB:'Postuler',
+    sl2T:'Archi-II est en développement',
+    sl2D:"Le développement d'Archi-II a commencé et devrait se terminer mi-mai. Ce modèle, doté d'une vaste base de données et linguistique, se prépare à devenir l'assistant IA le plus puissant de Stoat.chat. Issu de l'équipe Freedom, il devrait être assez mordant et critique.",
+    sl3T:'Nouveau système de classement bientôt disponible !',
+    sl3D:"Les utilisateurs seront soumis à une classification elo basée sur leur activité. Chaque jour d'inactivité coûte -30 elo, tandis que chaque message ajoute +0.5 elo. Les rangs seront déterminés par les niveaux elo, mais ces rangs sont purement basés sur l'ancienneté et n'affecteront pas les permissions.",
+    arD:"Archi est une application de chat et de modération conçue pour un stoat.chat à l'échelle communautaire. Elle a été développée avec RAG et fine-tuning.",
+    arB:'Utiliser Archi II',
+    nlH:'Accueil',nlC:'Communautés',lbl:'FR',
+    logo:'Freedom_French_Logo.png',
+    ticker:"FREEDOM EST MAINTENANT DISPONIBLE<sep>RESTEZ INFORMÉ DES RECRUTEMENTS !<sep>LE RANG « BON ENFANT » ARRIVE POUR LA FÊTE DES MÈRES<sep>LE DÉVELOPPEMENT D'ARCHI II AVANCE<sep>CONFIGURATION DU SERVEUR EN COURS",
+  },
 };
 
 const SRV = {
@@ -381,34 +463,97 @@ const SRV = {
   'dk-fr':{n:{en:'Freedom France',tr:'Freedom Fransa',fr:'Freedom France'},j:{en:'Join',tr:'Katıl',fr:'Rejoindre'},link:'https://stt.gg/YPaTXvX4',ban:'BANNERFREEDOMFR.png',n0:'Freedom_French_Logo.png',nc:'Freedom_French_Logo_Clicked.png'},
 };
 
-let lang='en', selDock='dk-gl', dropOpen=false;
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+let lang='en', selDock='dk-gl', dropOpen=false, carIdx=0;
+const SLIDES=3;
 
-/* ── LANG ── */
+/* ════════════════════════════════
+   UTILS
+════════════════════════════════ */
+function $(id){return document.getElementById(id)}
+
+/* ════════════════════════════════
+   TICKER
+════════════════════════════════ */
+function buildTicker(l){
+  const t = T[l];
+  const parts = t.ticker.split('<sep>');
+  let html = '';
+  // duplicate for seamless loop
+  for(let r=0;r<2;r++){
+    parts.forEach((txt,i)=>{
+      html += `<span class="ticker-item">${txt}</span>`;
+      html += `<span class="ticker-sep"> - </span>`;
+    });
+  }
+  $('ticker-track').innerHTML = html;
+}
+
+/* ════════════════════════════════
+   CAROUSEL
+════════════════════════════════ */
+function buildDots(){
+  const d = $('car-dots'); d.innerHTML='';
+  for(let i=0;i<SLIDES;i++){
+    const dot=document.createElement('div');
+    dot.className='c-dot'+(i===0?' on':'');
+    dot.onclick=()=>goSlide(i);
+    d.appendChild(dot);
+  }
+}
+function goSlide(i){
+  carIdx=i;
+  $('car-track').style.transform=`translateX(-${i*100}%)`;
+  document.querySelectorAll('.c-dot').forEach((d,j)=>d.classList.toggle('on',j===i));
+}
+$('car-prev').addEventListener('click',()=>goSlide((carIdx-1+SLIDES)%SLIDES));
+$('car-next').addEventListener('click',()=>goSlide((carIdx+1)%SLIDES));
+buildDots();
+
+/* ════════════════════════════════
+   LANG
+════════════════════════════════ */
 function applyLang(l){
   const t=T[l];
-  $('h-title').textContent=t.heroT; $('h-desc').textContent=t.heroD;
-  $('explore-btn').textContent=t.expl;
-  $('cur-title').textContent=t.curT; $('cur-btn').textContent=t.curB;
-  $('ar-title').textContent=t.arT;   $('ar-desc').textContent=t.arD; $('ar-btn').textContent=t.arB;
-  $('nl-h').textContent=t.nlH;       $('nl-c').textContent=t.nlC;
-  $('lang-lbl').textContent=t.lbl;
-  const hdr=$('header');
-  hdr.classList.remove('fr-header');
-  if(l==='fr') hdr.classList.add('fr-header');
-  refreshComm();
+  $('h-title').textContent   = t.heroT;
+  $('h-desc').textContent    = t.heroD;
+  $('explore-btn').textContent = t.expl;
+  $('cur-title').textContent = t.curT;
+  $('cur-meta').innerHTML    = t.curMeta;
+  $('cur-btn').textContent   = t.curB;
+  $('sl2-title').textContent = t.sl2T;
+  $('sl2-desc').textContent  = t.sl2D;
+  $('sl3-title').textContent = t.sl3T;
+  $('sl3-desc').textContent  = t.sl3D;
+  $('ar-desc').textContent   = t.arD;
+  $('ar-btn').textContent    = t.arB;
+  $('nl-h').textContent      = t.nlH;
+  $('nl-c').textContent      = t.nlC;
+  $('lang-lbl').textContent  = t.lbl;
+  // swap header logo
+  $('hc-logo').src = t.logo;
+  // rebuild ticker
+  buildTicker(l);
+  // url
   history.replaceState(null,'',l==='fr'?'/fr':l==='tr'?'/tr':'/');
+  refreshComm();
 }
 function setLang(l){lang=l;applyLang(l);closeDropdown()}
 
-/* ── COMM UI ── */
+/* ════════════════════════════════
+   COMMUNITIES
+════════════════════════════════ */
 function refreshComm(){
   const s=SRV[selDock];
   const nm=s.n[lang]; const jt=s.j[lang];
-  $('bg-nm').textContent=nm; $('srv-title').textContent=nm;
-  $('join-a').textContent=jt; $('join-a').href=s.link;
+  $('bg-nm').textContent=nm;
+  $('srv-title').textContent=nm;
+  $('join-a').textContent=jt;
+  $('join-a').href=s.link;
   $('c-ban-img').src=s.ban;
 }
-
 function selDockFn(id){
   Object.keys(SRV).forEach(k=>{
     const img=document.querySelector('#'+k+' img');
@@ -417,62 +562,90 @@ function selDockFn(id){
   selDock=id;
   const img=document.querySelector('#'+id+' img');
   if(img) img.src=SRV[id].nc;
-  const t=$('srv-title');
-  t.style.opacity='0';t.style.transform='translateY(10px)';
-  setTimeout(()=>{refreshComm();t.style.transition='opacity .28s,transform .28s';t.style.opacity='1';t.style.transform='translateY(0)'},140);
+  const tt=$('srv-title');
+  tt.style.opacity='0';tt.style.transform='translateY(10px)';
+  setTimeout(()=>{refreshComm();tt.style.transition='opacity .28s,transform .28s';tt.style.opacity='1';tt.style.transform='translateY(0)'},140);
 }
 ['dk-gl','dk-tr','dk-fr'].forEach(id=>$(id).addEventListener('click',()=>selDockFn(id)));
 
-/* ── PAGE ── */
+/* ════════════════════════════════
+   PAGE SWITCH
+════════════════════════════════ */
 function showPage(p){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   $('page-'+p).classList.add('active');
   const hdr=$('header');
+  hdr.classList.remove('scrolled-header','comm-header');
   if(p==='communities'){
-    if(lang!=='fr'){hdr.classList.add('comm-header')}
+    hdr.classList.add('comm-header');
     $('dock').classList.add('vis');
     $('join-wrap').classList.add('vis');
     selDockFn('dk-gl');
-    refreshComm();
   } else {
-    if(lang!=='fr'){hdr.classList.remove('comm-header')}
+    // on home: transparent if at top
+    if(window.scrollY < window.innerHeight*0.85){
+      /* stay transparent — scroll handler covers it */
+    }
     $('dock').classList.remove('vis');
     $('join-wrap').classList.remove('vis');
   }
   document.querySelectorAll('.nav-lnk').forEach(l=>l.classList.toggle('active',l.dataset.p===p));
-  closeNav(); window.scrollTo(0,0);
+  closeNav();
+  window.scrollTo(0,0);
 }
 $('explore-btn').addEventListener('click',()=>showPage('communities'));
 
-/* ── HAMBURGER ── */
+/* ════════════════════════════════
+   SCROLL — header transparency
+════════════════════════════════ */
+function handleScroll(){
+  if($('page-communities').classList.contains('active')) return;
+  const hdr=$('header');
+  const heroH = $('hero').offsetHeight;
+  if(window.scrollY > heroH * 0.85){
+    hdr.classList.add('scrolled-header');
+    hdr.classList.remove('comm-header');
+  } else {
+    hdr.classList.remove('scrolled-header','comm-header');
+  }
+}
+window.addEventListener('scroll', handleScroll, {passive:true});
+
+/* ════════════════════════════════
+   NAV DRAWER
+════════════════════════════════ */
 $('hbg').addEventListener('click',()=>{$('nav-dr').classList.add('open');$('nav-ov').classList.add('show')});
 function closeNav(){$('nav-dr').classList.remove('open');$('nav-ov').classList.remove('show')}
 $('nav-ov').addEventListener('click',closeNav);
 $('nav-x').addEventListener('click',closeNav);
 document.querySelectorAll('.nav-lnk').forEach(l=>l.addEventListener('click',()=>showPage(l.dataset.p)));
 
-/* ── DROPDOWN ── */
+/* ════════════════════════════════
+   HEADER DROPDOWN
+════════════════════════════════ */
 $('hdr-ctr').addEventListener('click',e=>{
   e.stopPropagation();
   dropOpen=!dropOpen;
   $('hdr-drop').classList.toggle('open',dropOpen);
-  $('hc-chev').classList.toggle('open',dropOpen);
+  $('hc-arrow').classList.toggle('open',dropOpen);
 });
 document.addEventListener('click',closeDropdown);
-function closeDropdown(){dropOpen=false;$('hdr-drop').classList.remove('open');$('hc-chev').classList.remove('open')}
+function closeDropdown(){dropOpen=false;$('hdr-drop').classList.remove('open');$('hc-arrow').classList.remove('open')}
 
-/* ── REVEAL ── */
-const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
+/* ════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════ */
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.1});
 document.querySelectorAll('.rev').forEach(x=>ro.observe(x));
 
-/* ── UTILS ── */
-function $(id){return document.getElementById(id)}
-
-/* ── INIT ── */
+/* ════════════════════════════════
+   INIT
+════════════════════════════════ */
 (()=>{
   const p=location.pathname;
   if(p.startsWith('/fr')){lang='fr';applyLang('fr')}
   else if(p.startsWith('/tr')){lang='tr';applyLang('tr')}
+  else{buildTicker('en')}
 })();
 </script>
 </body>
